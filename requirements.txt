@@ -1,0 +1,14 @@
+# Data Handling and Math
+pandas
+numpy
+scikit-learn
+
+# Machine Learning
+tensorflow
+
+# API and Communication
+requests
+#twilio - not mandatory now
+
+# Environment and Utilities
+python-dotenv
