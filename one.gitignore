@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+final_water_quality_log.csv
+.env
