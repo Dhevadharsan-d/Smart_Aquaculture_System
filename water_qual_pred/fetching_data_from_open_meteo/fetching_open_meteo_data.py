@@ -5,8 +5,6 @@ import math
 import os
 
 
-
-# 1. Configuration
 INPUT_CSV = 'water_qual_param.csv'  # The file you just fetched from Open-Meteo
 OUTPUT_CSV = 'final_water_quality_log.csv'
 
