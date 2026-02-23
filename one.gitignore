@@ -1,4 +1,14 @@
+# Python System Files
 __pycache__/
 *.pyc
-final_water_quality_log.csv
+
+# Security & Secrets
 .env
+
+# Data Logs (Local Only)
+final_water_quality_log.csv
+last_alert_timestamp.txt
+*.csv
+
+# Heavy Models (GitHub has a 100MB limit)
+*.keras
