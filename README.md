@@ -1,8 +1,8 @@
-# 🌊 Smart Aquaculture Monitoring & Prediction System
+#  Smart Aquaculture Monitoring & Prediction System
 
 This project implements an IoT-enabled real-time water quality monitoring method for aquaculture, focusing on predictive analytics and automated safety alerts.
 
-## 🛠️ Implementation Progress 
+##  Implementation Progress 
 
 ### **1. Automated Data Pipeline**
 * **Virtual Sensor Integration:** Developed a pipeline using the Open-Meteo API to fetch real-time environmental data (Air Temp, Humidity, Precipitation).
