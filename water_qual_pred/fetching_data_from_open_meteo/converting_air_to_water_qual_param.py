@@ -55,39 +55,93 @@ def fetch_hourly_weather(lat, lon, past_days):
 # ==============================================================================
 # 3. WATER QUALITY LOGIC (Preserving all 6 Columns)
 # ==============================================================================
+# def compute_water_quality(df):
+#     """Calculates water parameters while keeping weather data as features."""
+#     wt, do, ph = [], [], []
+#     prev_tw = None
+
+#     print("🧪 Calculating biological water parameters...")
+
+#     for _, r in df.iterrows():
+#         # Temperature Inertia Logic
+#         tw = r.air_temp - 1 if prev_tw is None else 0.7 * prev_tw + 0.3 * (r.air_temp - 1)
+        
+#         # DO Saturation Logic
+#         d = (14.6 - 0.2 * tw) * (1 + (r.humidity - 50) / 500)
+#         d = np.clip(d, 2, 14)
+        
+#         # pH Diurnal Cycle Logic
+#         hour = r.datetime.hour
+#         p = (7.4 + 0.3 * math.sin(2 * math.pi * hour / 24) - 0.01 * (tw - 26) - 
+#              0.08 * math.log1p(r.rain) + np.random.normal(0, 0.05))
+#         p = np.clip(p, 6.5, 9.0)
+
+#         wt.append(round(tw, 2))
+#         do.append(round(d, 2))
+#         ph.append(round(p, 2))
+#         prev_tw = tw
+
+#     # --- SINGLE SOURCE OF TRUTH: Merging Weather + Water Data ---
+#     final_df = pd.DataFrame({
+#         "id": range(1, len(df) + 1),
+#         "timestamp": df["datetime"],
+#         "air_temp": df["air_temp"],   # Added
+#         "humidity": df["humidity"],   # Added
+#         "rain": df["rain"],           # Added
+#         "water_temp": wt,
+#         "do": do,
+#         "ph": ph
+#     })
+#     return final_df
+
+import numpy as np
+import pandas as pd
+import math
+
 def compute_water_quality(df):
-    """Calculates water parameters while keeping weather data as features."""
+    """
+    Enhanced Soft-Sensing Logic:
+    Converts Weather API data into estimated Water Quality Parameters.
+    """
     wt, do, ph = [], [], []
     prev_tw = None
 
-    print("🧪 Calculating biological water parameters...")
+    print("🧪 Calculating biological water parameters using Soft-Sensing logic...")
 
     for _, r in df.iterrows():
-        # Temperature Inertia Logic
-        tw = r.air_temp - 1 if prev_tw is None else 0.7 * prev_tw + 0.3 * (r.air_temp - 1)
+        # 1. TEMPERATURE INERTIA (Thermal Lag)
+        target_tw = r.air_temp - 1.5
+        if prev_tw is None:
+            tw = target_tw
+        else:
+            tw = 0.85 * prev_tw + 0.15 * target_tw
         
-        # DO Saturation Logic
-        d = (14.6 - 0.2 * tw) * (1 + (r.humidity - 50) / 500)
-        d = np.clip(d, 2, 14)
+        # 2. ENHANCED DO LOGIC (Photosynthesis + Temp)
+        # FIX: Access the hour from the 'datetime' column
+        hour = r.datetime.hour 
+        solar_effect = 2.5 * math.sin(2 * math.pi * (hour - 10) / 24) 
         
-        # pH Diurnal Cycle Logic
-        hour = r.datetime.hour
-        p = (7.4 + 0.3 * math.sin(2 * math.pi * hour / 24) - 0.01 * (tw - 26) - 
-             0.08 * math.log1p(r.rain) + np.random.normal(0, 0.05))
-        p = np.clip(p, 6.5, 9.0)
+        d = (14.6 - 0.35 * tw) + solar_effect + (0.5 * math.log1p(r.rain))
+        d = np.clip(d, 3.0, 12.0) 
+        
+        # 3. pH DIURNAL CYCLE
+        ph_peak = 0.4 * math.sin(2 * math.pi * (hour - 10) / 24)
+        p = 7.6 + ph_peak - 0.1 * math.log1p(r.rain) + np.random.normal(0, 0.03)
+        p = np.clip(p, 6.5, 8.5)
 
         wt.append(round(tw, 2))
         do.append(round(d, 2))
         ph.append(round(p, 2))
         prev_tw = tw
 
-    # --- SINGLE SOURCE OF TRUTH: Merging Weather + Water Data ---
+    # --- FINAL DATAFRAME ---
+    # FIX: Use df["datetime"] to match the input column name
     final_df = pd.DataFrame({
         "id": range(1, len(df) + 1),
-        "timestamp": df["datetime"],
-        "air_temp": df["air_temp"],   # Added
-        "humidity": df["humidity"],   # Added
-        "rain": df["rain"],           # Added
+        "timestamp": df["datetime"], 
+        "air_temp": df["air_temp"],
+        "humidity": df["humidity"],
+        "rain": df["rain"],
         "water_temp": wt,
         "do": do,
         "ph": ph
