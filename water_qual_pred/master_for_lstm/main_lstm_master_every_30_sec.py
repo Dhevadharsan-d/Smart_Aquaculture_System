@@ -34,7 +34,7 @@ def start_automated_system():
                 run_stage(PREDICT_SCRIPT)
             
             print(f"\n🕒 Cycle complete. Sleeping for 2 minutes...")
-            time.sleep(120)  # 60 seconds = 1 minutes
+            time.sleep(30)  # 60 seconds = 1 minutes
             
     except KeyboardInterrupt:
         print("\n🛑 System stopped by user.")
