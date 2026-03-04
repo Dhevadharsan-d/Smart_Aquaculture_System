@@ -64,20 +64,20 @@ def send_sms_alert(message):
             to=FARMER_PHONE,
             body=f"Pond Alert: {message}"
         )
-        print("📲 SMS Alert sent to farmer!")
+        print(" SMS Alert sent to farmer!")
     except Exception as e:
-        print(f"❌ SMS Failed: {e}")
+        print(f" SMS Failed: {e}")
 
 def run_prediction_on_log():
     if not (os.path.exists(MODEL_PATH) and os.path.exists(DATA_PATH)):
-        print("❌ Error: Missing files.")
+        print(" Error: Missing files.")
         return
 
     model = load_model(MODEL_PATH)
     full_df = pd.read_csv(DATA_PATH)
     
     if len(full_df) < SEQ_HOURS:
-        print(f"❌ Error: Need {SEQ_HOURS} rows.")
+        print(f" Error: Need {SEQ_HOURS} rows.")
         return
 
     df = full_df.tail(SEQ_HOURS).copy()
@@ -93,18 +93,18 @@ def run_prediction_on_log():
 
     # --- Detailed Console Fluctuations ---
     p_temp, p_do, p_ph = final_values[0], final_values[1], final_values[2]
-    print(f"\n📊 [FORECAST] Temp: {p_temp:.2f}°C | DO: {p_do:.2f} mg/L | pH: {p_ph:.2f}")
+    print(f"\n [FORECAST] Temp: {p_temp:.2f}°C | DO: {p_do:.2f} mg/L | pH: {p_ph:.2f}")
 
     danger_alerts = check_safety_thresholds(final_values)
     
     if danger_alerts:
-        print(f"🚨 FLUCTUATION DETECTED in {len(danger_alerts)} parameters:")
+        print(f" FLUCTUATION DETECTED in {len(danger_alerts)} parameters:")
         for alert in danger_alerts:
-            print(f"   👉 {alert}") # Tells you exactly which parameter and what the issue is
+            print(f"    {alert}") # Tells you exactly which parameter and what the issue is
         
         send_sms_alert(" | ".join(danger_alerts))
     else:
-        print("✅ Status: Normal")
+        print(" Status: Normal")
 
 if __name__ == "__main__":
     run_prediction_on_log()
