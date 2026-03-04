@@ -17,27 +17,27 @@ def run_stage(script_path):
         subprocess.run([sys.executable, abs_path], check=True, cwd=script_dir)
         return True
     except Exception as e:
-        print(f"❌ Error in {os.path.basename(script_path)}: {e}")
+        print(f" Error in {os.path.basename(script_path)}: {e}")
         return False
 
 def start_automated_system():
-    print("🌊 STARTING 10-MINUTE AUTOMATED MONITORING...")
+    print(" STARTING 10-MINUTE AUTOMATED MONITORING...")
     
     try:
         while True:
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            print(f"\n[{now}] 🔄 Starting new cycle...")
+            print(f"\n[{now}]  Starting new cycle...")
 
             # Stage 1: Fetch & Store (Now overwriting CSV with fresh 10-min updates)
             if run_stage(FETCH_SCRIPT):
                 # Stage 2: Predict & SMS (Safety Gate logic runs here)
                 run_stage(PREDICT_SCRIPT)
             
-            print(f"\n🕒 Cycle complete. Sleeping for 2 minutes...")
+            print(f"\n Cycle complete. Sleeping for 2 minutes...")
             time.sleep(30)  # 60 seconds = 1 minutes
             
     except KeyboardInterrupt:
-        print("\n🛑 System stopped by user.")
+        print("\n System stopped by user.")
 
 if __name__ == "__main__":
     start_automated_system()
