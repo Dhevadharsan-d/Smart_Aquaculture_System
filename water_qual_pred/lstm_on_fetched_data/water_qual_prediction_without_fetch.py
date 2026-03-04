@@ -45,7 +45,7 @@ def check_safety_thresholds(prediction):
         alerts.append(f"WARNING: High pH ({ph:.2f}).")
 
     # 3. Water Temperature
-    if temp < 50.0:
+    if temp < 20.0:
         alerts.append(f"ALERT: Low Temp ({temp:.2f}°C). Metabolism slow.")
     elif temp > 32.0:
         alerts.append(f"ALERT: High Temp ({temp:.2f}°C). Stress risk.")
