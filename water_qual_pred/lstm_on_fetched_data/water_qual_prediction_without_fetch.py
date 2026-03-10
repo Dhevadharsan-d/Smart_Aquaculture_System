@@ -35,9 +35,9 @@ def check_safety_thresholds(prediction):
         alerts.append(f"WARNING: Low Oxygen ({do:.2f} mg/L).")
     elif do > 12.0:
         alerts.append(f"WARNING: High Oxygen ({do:.2f} mg/L).")
-        
+
     # 2. pH Level
-    if ph < 50: #6.5
+    if ph < 6.5:
         alerts.append(f"CRITICAL: Acidic Water ({ph:.2f}). Add lime.")
     elif ph > 9.0:
         alerts.append(f"CRITICAL: Highly Alkaline ({ph:.2f}). Ammonia Risk!")
